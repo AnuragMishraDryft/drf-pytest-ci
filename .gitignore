@@ -1,0 +1,17 @@
+# Ignore Python & Django files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+
+# Ignore Virtual Environments
+venv/
+.env
+
+# Ignore Poetry Files (if needed)
+poetry.lock
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
