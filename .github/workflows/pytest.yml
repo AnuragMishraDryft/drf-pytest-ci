@@ -12,6 +12,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: sample_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 1234@chai
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d sample_db"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -19,11 +34,22 @@ jobs:
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.12"
 
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
+      
+      - name: Configure Environment Variables
+        run: |
+          echo "DJANGO_ENV=development" >> $GITHUB_ENV
+          echo "DJANGO_SECRET_KEY=xyz" >> $GITHUB_ENV
+          echo "POSTGRES_HOST=db" >> $GITHUB_ENV
+          echo "POSTGRES_PORT=5432" >> $GITHUB_ENV
+          echo "POSTGRES_USER=postgres" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=1234@chai" >> $GITHUB_ENV
+          echo "POSTGRES_DB=sample_db" >> $GITHUB_ENV
+          echo "POSTGRES_SSLMODE=disable" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: |
