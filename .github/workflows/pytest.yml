@@ -40,18 +40,17 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
       
-      - name: Load Environment Variables
+      - name: Set Environment Variables
         run: |
-           echo "DJANGO_ENV=development" >> .env
-           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
-           echo "POSTGRES_HOST=127.0.0.1" >> .env
-           echo "POSTGRES_PORT=5432" >> .env
-           echo "POSTGRES_USER=postgres" >> .env
-           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-           echo "POSTGRES_DB=sample_db" >> .env
-           echo "POSTGRES_SSLMODE=disable" >> .env
+          echo "DJANGO_ENV=development" >> $GITHUB_ENV
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "POSTGRES_HOST=127.0.0.1" >> $GITHUB_ENV
+          echo "POSTGRES_PORT=5432" >> $GITHUB_ENV
+          echo "POSTGRES_USER=postgres" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
+          echo "POSTGRES_DB=sample_db" >> $GITHUB_ENV
+          echo "POSTGRES_SSLMODE=disable" >> $GITHUB_ENV
 
-      
       - name: Install Dependencies
         run: |
           poetry install --no-root
@@ -60,9 +59,12 @@ jobs:
         run: |
           echo "Waiting for PostgreSQL to be ready..."
           for i in {1..5}; do
-            pg_isready -h 127.0.0.1 -p 5432 -U postgres && echo "PostgreSQL is ready!" && exit 0
-            echo "Not ready yet..."
-            sleep 2
+            if pg_isready -h 127.0.0.1 -p 5432 -U postgres; then
+              echo "PostgreSQL is ready!"
+              exit 0
+            fi
+            echo "Not ready yet... retrying in $((i * 2)) seconds"
+            sleep $((i * 2))
           done
           echo "PostgreSQL did not start in time." && exit 1
 
