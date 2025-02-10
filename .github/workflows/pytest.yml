@@ -50,11 +50,7 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
           echo "POSTGRES_DB=sample_db" >> $GITHUB_ENV
           echo "POSTGRES_SSLMODE=disable" >> $GITHUB_ENV
-      
-      - name: Verify DJANGO_ENV
-        run: |
-          echo "DJANGO_ENV is set to: $DJANGO_ENV"
-          
+
       - name: Install Dependencies
         run: |
           poetry install --no-root
