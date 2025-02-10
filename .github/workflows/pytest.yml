@@ -54,14 +54,11 @@ jobs:
       - name: Install Dependencies
         run: |
           poetry install --no-root
-
-      - name: Check PostgreSQL Logs
-        run: docker logs $(docker ps -q --filter ancestor=postgres:13)
       
       - name: Wait for PostgreSQL
         run: |
           echo "Waiting for PostgreSQL to be ready..."
-          for i in {1..30}; do
+          for i in {1..5}; do
             pg_isready -h 127.0.0.1 -p 5432 -U postgres && echo "PostgreSQL is ready!" && exit 0
             echo "Not ready yet..."
             sleep 2
