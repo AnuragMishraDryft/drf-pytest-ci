@@ -42,7 +42,7 @@ jobs:
       
       - name: Set Environment Variables
         run: |
-          echo "DJANGO_ENV=development" >> $GITHUB_ENV
+          echo "DJANGO_ENV=test" >> $GITHUB_ENV
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
           echo "POSTGRES_HOST=127.0.0.1" >> $GITHUB_ENV
           echo "POSTGRES_PORT=5432" >> $GITHUB_ENV
@@ -50,7 +50,11 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
           echo "POSTGRES_DB=sample_db" >> $GITHUB_ENV
           echo "POSTGRES_SSLMODE=disable" >> $GITHUB_ENV
-
+      
+      - name: Verify DJANGO_ENV
+        run: |
+          echo "DJANGO_ENV is set to: $DJANGO_ENV"
+          
       - name: Install Dependencies
         run: |
           poetry install --no-root
