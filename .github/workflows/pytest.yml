@@ -1,4 +1,4 @@
-name: Run Pytest on DRF Project with Poetry
+name: API Tests
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test:
+  test-api:
     runs-on: ubuntu-latest
 
     services:
